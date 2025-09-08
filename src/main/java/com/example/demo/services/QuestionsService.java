@@ -6,10 +6,12 @@ import com.example.demo.dto.QuestionResponseDTO;
 import com.example.demo.models.Questions;
 import com.example.demo.repositories.IQuestionsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,6 +47,14 @@ public class QuestionsService implements  IQuestionsService
     public Mono<Void> deleteQuestionById(String id) {
         return questionsRepository.deleteById(id)
                 .doOnError(error -> System.out.println("Question not deleted "+error));
+    }
+
+    @Override
+    public Flux<QuestionResponseDTO> findByTitleOrContentContainingIgnoreCase(String searchTerm, int page, int size) {
+        return questionsRepository.findByTitleOrContentContainingIgnoreCase(searchTerm,PageRequest.of(page,size))
+                .map(QuestionAdapter::toQuestionResponseDTO)
+                .doOnError(error-> System.out.println("Questions Not found "+error))
+                .doOnComplete(()-> System.out.println("Question found"));
     }
 
 }

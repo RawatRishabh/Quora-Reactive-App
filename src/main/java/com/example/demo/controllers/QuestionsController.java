@@ -37,13 +37,13 @@ public class QuestionsController
     }
 
     @GetMapping("/search")
-    public Flux<QuestionResponseDTO> searchQuestions(@RequestParam String query, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
+    public Flux<QuestionResponseDTO> findByTitleOrContentContainingIgnoreCase(@RequestParam String searchTerm, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
     {
-        return null;
+        return iQuestionsService.findByTitleOrContentContainingIgnoreCase(searchTerm,page,size);
     }
 
     @GetMapping("/tag/{tag}")
-    public Flux<QuestionResponseDTO> getQuestionsByTag(@PathVariable String tag, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size)
+    public Flux<QuestionResponseDTO> getQuestionsByTag(@PathVariable String tag, @RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int page)
     {
         return null;
     }
