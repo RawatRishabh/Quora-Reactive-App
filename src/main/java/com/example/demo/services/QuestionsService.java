@@ -5,15 +5,15 @@ import com.example.demo.dto.QuestionRequestDTO;
 import com.example.demo.dto.QuestionResponseDTO;
 import com.example.demo.models.Questions;
 import com.example.demo.repositories.IQuestionsRepository;
+import com.example.demo.utils.CursorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +38,21 @@ public class QuestionsService implements  IQuestionsService
 
     @Override
     // flux itself stream of list
-    public Flux<QuestionResponseDTO> getAllQuestions() {
-      return questionsRepository.findAll().map(QuestionAdapter::toQuestionResponseDTO)
-              .doOnError(error -> System.out.println("Hello" + error));
+    public Flux<QuestionResponseDTO> getAllQuestions(String cursor, int size) {
+        Pageable pageable = PageRequest.of(0,size);
+        if(CursorUtils.checkCursor(cursor))
+        {
+            return questionsRepository.findTop10ByOrderByCreatedAtAsc()
+                    .take(size)  // take only 'size' number of records from previous records results
+                    .map(QuestionAdapter::toQuestionResponseDTO)
+                    .doOnError(error -> System.out.println("Hello" + error))
+                    .doOnComplete(()-> System.out.println("Question found"));
+        }
+        LocalDateTime cursorTimeStamp = CursorUtils.parseCursor(cursor);
+        return questionsRepository.findByCreatedAtGreaterThanOrderByCreatedAtAsc(cursorTimeStamp,pageable)
+                .map(QuestionAdapter::toQuestionResponseDTO)
+                .doOnError(error -> System.out.println("Hello" + error))
+                .doOnComplete(()-> System.out.println("Question found"));
     }
 
     @Override
@@ -58,3 +70,4 @@ public class QuestionsService implements  IQuestionsService
     }
 
 }
+// Pagination parameter homework

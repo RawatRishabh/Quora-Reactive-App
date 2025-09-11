@@ -24,9 +24,10 @@ public class QuestionsController
     }
 
     @GetMapping()
-        public Flux<QuestionResponseDTO> getAllQuestions()
+        public Flux<QuestionResponseDTO> getAllQuestions(   @RequestParam(required = false) String cursor,
+                                                            @RequestParam(defaultValue = "10") int size)
         {
-            return iQuestionsService.getAllQuestions()
+            return iQuestionsService.getAllQuestions(cursor,size)
                     .doOnError(error -> System.out.println("Collection is empty"+ error));
         }
 

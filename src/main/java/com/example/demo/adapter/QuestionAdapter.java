@@ -13,6 +13,7 @@ public class QuestionAdapter
                 .title(questions.getTitle())
                 .content(questions.getContent())
                 .createdAt(questions.getCreatedAt())
+                .updatedAt(questions.getUpdatedAt())
                 .build();
     }
 }

@@ -14,4 +14,5 @@ public class QuestionResponseDTO
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

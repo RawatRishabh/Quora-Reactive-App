@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 public interface IQuestionsService
 {
     Mono<QuestionResponseDTO> createQuestion(QuestionRequestDTO requestDTO);
-    Flux<QuestionResponseDTO> getAllQuestions();
+    Flux<QuestionResponseDTO> getAllQuestions(String cursor, int size);
     Mono<Void> deleteQuestionById(String id);
     Flux<QuestionResponseDTO> findByTitleOrContentContainingIgnoreCase(String searchTerm, int page, int size);
 }
